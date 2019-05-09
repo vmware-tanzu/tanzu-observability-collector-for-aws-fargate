@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
+	. "github.com/wavefrontHQ/wavefront-fargate-collector/backend"
 	wavefrontSenders "github.com/wavefronthq/wavefront-sdk-go/senders"
-	. "github.com/yogeshprasad/fargate/backend"
 )
 
 func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
@@ -29,7 +29,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	metricFlushInterval, err := strconv.Atoi(userInput["metric_flush_interval"])
 	if err != nil {
 		fmt.Println("Setting metrics flush interval to 5 seconds, as it is not supplied or supplied value is invalid")
-		metricFlushInterval = 5 // Set default metric flush interval to 5 second if user is not intended to change
+		metricFlushInterval = 60 // Set default metric flush interval to 60 second if user is not intended to change
 	}
 
 	metricPrefix = userInput["storage_driver_wf_metric_prefix"]
@@ -86,26 +86,23 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 
 		sender, err = wavefrontSenders.NewDirectSender(directCfg)
 		if err != nil {
-			log.Println(err.Error())
-			wg.Done()
-			return
+			log.Fatal(err.Error())
 		}
 	}
 
-	for {
+	for range time.Tick(metricFlushInterval * time.Second) {
 		metrics, err := GetMetrics()
 		if err != nil {
 			log.Println(err.Error())
-			break
+		} else {
+			if metrics == nil {
+				log.Println("Data not found")
+			}
+			hostName, _ := os.Hostname()
+			for _, item := range metrics {
+				sender.SendMetric(metricPrefix+item.Name, item.Value, 0, hostName, item.Tags)
+			}
 		}
-		if metrics == nil {
-			log.Println("Data not found")
-		}
-		hostName, _ := os.Hostname()
-		for _, item := range metrics {
-			sender.SendMetric(metricPrefix+item.Name, item.Value, 0, hostName, item.Tags)
-		}
-		time.Sleep(2 * time.Second)
 	}
 	sender.Close()
 	wg.Done() // Specify the waitgroup about the completion of a goroutine

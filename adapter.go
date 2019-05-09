@@ -46,7 +46,7 @@ func main() {
 			}
 		}
 
-		wg.Add(1) // create a waightgroup entry for a goroutine
+		wg.Add(1) // create a waitgroup entry for a goroutine
 
 		// Call the storage driver
 		go funcs[*storageDriver](storageDriverOpt, &wg)
