@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	. "github.com/wavefrontHQ/wavefront-fargate-collector/backend"
+	. "github.com/wavefronthq/wavefront-fargate-collector/backend"
 	wavefrontSenders "github.com/wavefronthq/wavefront-sdk-go/senders"
 )
 
@@ -21,14 +21,12 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	clusterURL := userInput["storage_driver_wf_cluster_url"]
 
 	if proxyHost == "" && clusterURL == "" {
-		log.Println("Please supply either proxy IP or wavefront cluster URL")
-		wg.Done()
-		return
+		log.Fatal("Please supply either proxy IP or wavefront cluster URL")
 	}
 
 	metricFlushInterval, err := strconv.Atoi(userInput["metric_flush_interval"])
 	if err != nil {
-		fmt.Println("Setting metrics flush interval to 5 seconds, as it is not supplied or supplied value is invalid")
+		fmt.Println("Setting metrics flush interval to 60 seconds, as it is not supplied or supplied value is invalid")
 		metricFlushInterval = 60 // Set default metric flush interval to 60 second if user is not intended to change
 	}
 
@@ -50,16 +48,12 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 
 		sender, err = wavefrontSenders.NewProxySender(proxyCfg)
 		if err != nil {
-			log.Println(err.Error())
-			wg.Done()
-			return
+			log.Fatal(err.Error())
 		}
 	} else {
 		wfClusterAPIToken := userInput["storage_driver_wf_cluster_api_token"]
 		if wfClusterAPIToken == "" {
-			log.Println("Please supply wavefront cluster API token")
-			wg.Done()
-			return
+			log.Fatal("Please supply wavefront cluster API token")
 		}
 
 		directCfg := &wavefrontSenders.DirectConfiguration{
@@ -90,7 +84,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 		}
 	}
 
-	for range time.Tick(metricFlushInterval * time.Second) {
+	for range time.Tick(time.Duration(metricFlushInterval) * time.Second) {
 		metrics, err := GetMetrics()
 		if err != nil {
 			log.Println(err.Error())

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	handler "github.com/yogeshprasad/fargate/backend"
-	"github.com/yogeshprasad/fargate/storage"
+	handler "github.com/wavefronthq/wavefront-fargate-collector/backend"
+	"github.com/wavefronthq/wavefront-fargate-collector/storage"
 )
 
 func main() {
@@ -17,6 +17,7 @@ func main() {
 	storageDriver := flag.String("storage_driver", "", "Storage driver to send data to")
 	storageDriverOptStr := flag.String("storage_driver_options", "", `Storage driver options e.g "key1=value1, key2=value2"`)
 	port := flag.Int("port", 0, "Port to listen")
+	debug := flag.Bool("debug", false, "Set true to enable debug mode")
 
 	flag.Parse()
 
@@ -28,13 +29,17 @@ func main() {
 
 	// Do not use the storage driver if user is not intended
 	if *storageDriver == "" {
-		log.Printf("Storage driver is not supplied")
-	} else {
+		message := "Storage driver is not supplied"
+		if *debug == true {
+			log.Println(message)
+		}else {
+			log.Fatal(message)
+		}
+	} else if *storageDriver != "" {
 		// Check is supplied storage driver is supported
 		_, has := funcs[*storageDriver]
 		if !has {
-			log.Printf("Supplied storage driver is not supported")
-			return
+			log.Fatal("Supplied storage driver is not supported")
 		}
 
 		// Process the storageType specific inputs
@@ -54,7 +59,6 @@ func main() {
 
 	// Start the server if port is supplied
 	if *port != 0 {
-
 		http.Handle("/", http.FileServer(http.Dir("./static")))
 		http.HandleFunc("/metrics", handler.MetricsHandler)
 		http.HandleFunc("/stats", handler.StatsHandler)
@@ -63,7 +67,7 @@ func main() {
 		log.Printf("Server is listening on port " + strconv.Itoa(*port))
 		http.ListenAndServe(":"+strconv.Itoa(*port), nil)
 	} else {
-		log.Printf("Listener configurationn is not supplied")
+		log.Fatal("Listener configurationn is not supplied")
 	}
 
 	if *storageDriver != "" {
