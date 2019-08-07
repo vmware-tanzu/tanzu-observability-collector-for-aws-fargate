@@ -45,7 +45,7 @@ func main() {
 		// Process the storageType specific inputs
 		storageDriverOpt := map[string]string{}
 		if *storageDriverOptStr != "" {
-			for _, item := range strings.Split(*storageDriverOptStr, " ") {
+			for _, item := range strings.Split(strings.TrimSpace(*storageDriverOptStr), " ") {
 				kwargs := strings.Split(item, "=")
 				storageDriverOpt[strings.TrimSpace(kwargs[0])] = strings.TrimSpace(kwargs[1])
 			}
