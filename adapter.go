@@ -32,7 +32,7 @@ func main() {
 		message := "Storage driver is not supplied"
 		if *debug == true {
 			log.Println(message)
-		}else {
+		} else {
 			log.Fatal(message)
 		}
 	} else if *storageDriver != "" {
