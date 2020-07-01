@@ -40,6 +40,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	Debug(userInput, fmt.Sprintf("metric prefix is: %s", metricPrefix))
 
 	if proxyHost != "" {
+		Debug(userInput, fmt.Sprintf("Using proxy host: %s", proxyHost))
 		proxyCfg := &wavefrontSenders.ProxyConfiguration{
 			Host:                 proxyHost, // Proxy host IP or domain name
 			MetricsPort:          2878,
