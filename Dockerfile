@@ -1,5 +1,5 @@
 # iron/go is the alpine image with only ca-certificates added
-FROM busybox:1.29.2-glibc
+FROM busybox:1.32-glibc
 WORKDIR /app
 # add static html files
 ADD static /app/static
