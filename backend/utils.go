@@ -166,3 +166,9 @@ func GetMetrics() ([]Metric, error) {
 	}
 	return metrics, nil
 }
+
+func Debug(storage_driver_options map[string]string, message string) {
+	if storage_driver_options["storage_driver_debug"] == "true" {
+		log.Printf("DEBUG: %s", message)
+	}
+}
