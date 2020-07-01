@@ -98,7 +98,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 			hostName, _ := os.Hostname()
 			Debug(userInput, fmt.Sprintf("hostname is: %s", hostName))
 			for _, item := range metrics {
-				Debug(userInput, fmt.Sprintf("sending metric: %s, %s, 0, %s, %#v", metricPrefix+item.Name, item.Value, hostName, item.Tags))
+				Debug(userInput, fmt.Sprintf("sending metric: %s, %f, 0, %s, %v", metricPrefix+item.Name, item.Value, hostName, item.Tags))
 				sender.SendMetric(metricPrefix+item.Name, item.Value, 0, hostName, item.Tags)
 			}
 		}
