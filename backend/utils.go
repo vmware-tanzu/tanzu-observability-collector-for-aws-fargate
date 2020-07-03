@@ -2,6 +2,7 @@ package backend
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -71,6 +72,12 @@ func callAPI(route string) (map[string]interface{}, error) {
 	if err != nil {
 		log.Printf("The HTTP request failed with error %s\n", err)
 		return nil, err
+	}
+
+	if response.StatusCode > 399 {
+		e := fmt.Errorf("Received HTTP response code: %d", response.StatusCode)
+		log.Println(e)
+		return nil, e
 	}
 
 	data, _ := ioutil.ReadAll(response.Body)
