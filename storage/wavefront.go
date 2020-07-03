@@ -37,7 +37,10 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 		metricPrefix = userInput["storage_driver_wf_metric_prefix"]
 	}
 
+	Debug(userInput, fmt.Sprintf("metric prefix is: %s", metricPrefix))
+
 	if proxyHost != "" {
+		Debug(userInput, fmt.Sprintf("Using proxy host: %s", proxyHost))
 		proxyCfg := &wavefrontSenders.ProxyConfiguration{
 			Host:                 proxyHost, // Proxy host IP or domain name
 			MetricsPort:          2878,
@@ -85,6 +88,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	}
 
 	for range time.Tick(time.Duration(metricFlushInterval) * time.Second) {
+		Debug(userInput, "metric collection loop starts")
 		metrics, err := GetMetrics()
 		if err != nil {
 			log.Println(err.Error())
@@ -93,11 +97,16 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 				log.Println("Data not found")
 			}
 			hostName, _ := os.Hostname()
+			Debug(userInput, fmt.Sprintf("hostname is: %s", hostName))
 			for _, item := range metrics {
+				Debug(userInput, fmt.Sprintf("sending metric: %s, %f, 0, %s, %v", metricPrefix+item.Name, item.Value, hostName, item.Tags))
 				sender.SendMetric(metricPrefix+item.Name, item.Value, 0, hostName, item.Tags)
 			}
 		}
+
+		Debug(userInput, "metric collection loop ends")
 	}
+	Debug(userInput, "metric collection ends")
 	sender.Close()
 	wg.Done() // Specify the waitgroup about the completion of a goroutine
 	return

@@ -44,6 +44,11 @@ The default flush interval is 5 seconds. To override the interval, modify the `s
 -storage_driver_options "metric_flush_interval=<nnumber of seconds>"
 ```
 
+### Storage Driver Debug Logging
+To enable more verbose logging within the storage driver pass the following option:
+```
+-storage_driver_options "storage_driver_debug=true"
+```
 
 [ci-img]: https://travis-ci.com/wavefrontHQ/wavefront-fargate-collector.svg?branch=master
 [ci]: https://travis-ci.com/wavefrontHQ/wavefront-fargate-collector
