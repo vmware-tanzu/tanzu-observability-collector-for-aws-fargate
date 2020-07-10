@@ -12,7 +12,14 @@ import (
 	"github.com/wavefronthq/wavefront-fargate-collector/storage"
 )
 
+var (
+	version string
+	commit  string
+)
+
 func main() {
+	log.Printf("Starting collector version: %s commit tip: %s\n", version, commit)
+
 	// All parameters are optional
 	storageDriver := flag.String("storage_driver", "", "Storage driver to send data to")
 	storageDriverOptStr := flag.String("storage_driver_options", "", `Storage driver options e.g "key1=value1, key2=value2"`)
