@@ -16,7 +16,7 @@ Use direct ingestion to send the data directly to the Wavefront service. This is
 To enable this method, start the container with the following options:
 ```
 -storage_driver wavefront
--storage_driver_options "storage_driver_wf_cluster_url=https://<YOUR_CLUSTER>.wavefront.com -storage_driver_wf_cluster_api_token=<YOUR_API_TOKEN>"
+-storage_driver_options "storage_driver_wf_cluster_url=https://<YOUR_CLUSTER>.wavefront.com storage_driver_wf_cluster_api_token=<YOUR_API_TOKEN>"
 ```
 
 **Note:** The API token must have direct ingestion permission.
@@ -29,6 +29,11 @@ To enable this method, start the container with the following options:
 ```
 -storage_driver wavefront
 -storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP>"
+```
+By default, the collector uses 2878 metric port to send metrics to the wavefront proxy to customize this port add 
+`storage_driver_wf_metric_port` to the above command like below:
+```
+-storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP> storage_driver_wf_metric_port=<metric_port>"
 ```
 
 ## Configuration Options

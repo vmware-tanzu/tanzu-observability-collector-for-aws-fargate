@@ -41,9 +41,14 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 
 	if proxyHost != "" {
 		Debug(userInput, fmt.Sprintf("Using proxy host: %s", proxyHost))
+		proxyMetricPort, err := strconv.Atoi(userInput["storage_driver_wf_metric_port"])
+		if err != nil {
+				fmt.Println("Setting metric port to 2878, as it is not supplied or supplied value is invalid")
+				proxyMetricPort = 2878
+		}
 		proxyCfg := &wavefrontSenders.ProxyConfiguration{
 			Host:                 proxyHost, // Proxy host IP or domain name
-			MetricsPort:          2878,
+			MetricsPort:          proxyMetricPort,
 			DistributionPort:     40000,
 			TracingPort:          50000,
 			FlushIntervalSeconds: metricFlushInterval,
