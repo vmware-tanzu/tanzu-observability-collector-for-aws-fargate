@@ -28,12 +28,7 @@ This sends the data to the Wavefront proxy, which then forwards the data to the 
 To enable this method, start the container with the following options:
 ```
 -storage_driver wavefront
--storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP>"
-```
-By default, the collector uses 2878 metric port to send metrics to the wavefront proxy to customize this port add 
-`storage_driver_wf_metric_port` to the above command like below:
-```
--storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP> storage_driver_wf_metric_port=<metric_port>"
+-storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP> storage_driver_wf_metric_port=2878"
 ```
 
 ## Configuration Options
@@ -46,7 +41,7 @@ The default metrics prefix is `aws.fargate.`. To override the prefix, modify the
 ### Metrics Flush Interval
 The default flush interval is 5 seconds. To override the interval, modify the `storage_driver_options` as follows:
 ```
--storage_driver_options "metric_flush_interval=<nnumber of seconds>"
+-storage_driver_options "metric_flush_interval=<number of seconds>"
 ```
 
 ### Storage Driver Debug Logging
