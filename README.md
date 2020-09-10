@@ -16,7 +16,7 @@ Use direct ingestion to send the data directly to the Wavefront service. This is
 To enable this method, start the container with the following options:
 ```
 -storage_driver wavefront
--storage_driver_options "storage_driver_wf_cluster_url=https://<YOUR_CLUSTER>.wavefront.com -storage_driver_wf_cluster_api_token=<YOUR_API_TOKEN>"
+-storage_driver_options "storage_driver_wf_cluster_url=https://<YOUR_CLUSTER>.wavefront.com storage_driver_wf_cluster_api_token=<YOUR_API_TOKEN>"
 ```
 
 **Note:** The API token must have direct ingestion permission.
@@ -28,7 +28,7 @@ This sends the data to the Wavefront proxy, which then forwards the data to the 
 To enable this method, start the container with the following options:
 ```
 -storage_driver wavefront
--storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP>"
+-storage_driver_options "storage_driver_wf_proxy_host=<proxy_host_IP> storage_driver_wf_metric_port=2878"
 ```
 
 ## Configuration Options
@@ -41,7 +41,7 @@ The default metrics prefix is `aws.fargate.`. To override the prefix, modify the
 ### Metrics Flush Interval
 The default flush interval is 5 seconds. To override the interval, modify the `storage_driver_options` as follows:
 ```
--storage_driver_options "metric_flush_interval=<nnumber of seconds>"
+-storage_driver_options "metric_flush_interval=<number of seconds>"
 ```
 
 ### Storage Driver Debug Logging

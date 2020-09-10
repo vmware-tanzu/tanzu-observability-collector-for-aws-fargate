@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -16,6 +17,7 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	var sender wavefrontSenders.Sender
 	var err error
 	var metricPrefix string
+	var metricFlushInterval, proxyMetricPort int
 
 	proxyHost := userInput["storage_driver_wf_proxy_host"]
 	clusterURL := userInput["storage_driver_wf_cluster_url"]
@@ -24,10 +26,14 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 		log.Fatal("Please supply either proxy IP or wavefront cluster URL")
 	}
 
-	metricFlushInterval, err := strconv.Atoi(userInput["metric_flush_interval"])
-	if err != nil {
-		fmt.Println("Setting metrics flush interval to 60 seconds, as it is not supplied or supplied value is invalid")
+	metricFlushIntervalUserInput := userInput["metric_flush_interval"]
+	if metricFlushIntervalUserInput == "" {
 		metricFlushInterval = 60 // Set default metric flush interval to 60 second if user is not intended to change
+	} else {
+		metricFlushInterval, err = strconv.Atoi(metricFlushIntervalUserInput)
+		if err != nil {
+			log.Fatal("Supplied value for metrics flush interval is invalid, must be an integer")
+		}
 	}
 
 	metricPrefix = userInput["storage_driver_wf_metric_prefix"]
@@ -40,12 +46,25 @@ func Wavefront(userInput map[string]string, wg *sync.WaitGroup) {
 	Debug(userInput, fmt.Sprintf("metric prefix is: %s", metricPrefix))
 
 	if proxyHost != "" {
+		if strings.Contains(proxyHost, ":") {
+			log.Fatal("Supplied value for proxy host IP is invalid, should not contain colon")
+		}
+
+		proxyMetricPortUserInput := userInput["storage_driver_wf_metric_port"]
+		if proxyMetricPortUserInput == "" {
+			proxyMetricPort = 2878 // Set default metric port to 2878 if user is not intended to change
+		} else {
+			proxyMetricPort, err = strconv.Atoi(proxyMetricPortUserInput)
+			if err != nil {
+				log.Fatal("Supplied value for metric port is invalid, must be a valid port number")
+			}
+		}
+
 		Debug(userInput, fmt.Sprintf("Using proxy host: %s", proxyHost))
+
 		proxyCfg := &wavefrontSenders.ProxyConfiguration{
 			Host:                 proxyHost, // Proxy host IP or domain name
-			MetricsPort:          2878,
-			DistributionPort:     40000,
-			TracingPort:          50000,
+			MetricsPort:          proxyMetricPort,
 			FlushIntervalSeconds: metricFlushInterval,
 		}
 
