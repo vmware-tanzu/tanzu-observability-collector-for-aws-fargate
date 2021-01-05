@@ -33,8 +33,8 @@ build-darwin:
 
 container:
 	# Run build in a container in order to have reproducible builds
-	docker run --rm -v $(TEMP_DIR):/build -v $(REPO_DIR):/go/src/github.com/wavefronthq/wavefront-fargate-collector -w /go/src/github.com/wavefronthq/wavefront-fargate-collector golang:$(GOLANG_VERSION) /bin/bash -c "\
-		GOARCH=$(ARCH) CGO_ENABLED=0 go build -ldflags \"$(LDFLAGS)\" -a -tags netgo -o /build/$(BINARY_NAME)_linux github.com/wavefronthq/wavefront-fargate-collector/"
+	docker run --rm -v $(TEMP_DIR):/build -v $(REPO_DIR):/go/src/github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate -w /go/src/github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate golang:$(GOLANG_VERSION) /bin/bash -c "\
+		GOARCH=$(ARCH) CGO_ENABLED=0 go build -ldflags \"$(LDFLAGS)\" -a -tags netgo -o /build/$(BINARY_NAME)_linux github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate/"
 
 	cp Dockerfile $(TEMP_DIR)
 	cp -r static $(TEMP_DIR)

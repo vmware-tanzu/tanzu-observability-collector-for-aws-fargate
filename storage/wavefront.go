@@ -26,7 +26,7 @@ import (
 	"sync"
 	"time"
 
-	. "github.com/wavefronthq/wavefront-fargate-collector/backend"
+	. "github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate/backend"
 	wavefrontSenders "github.com/wavefronthq/wavefront-sdk-go/senders"
 )
 

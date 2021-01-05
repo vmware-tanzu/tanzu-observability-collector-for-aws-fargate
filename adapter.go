@@ -25,8 +25,8 @@ import (
 	"strings"
 	"sync"
 
-	handler "github.com/wavefronthq/wavefront-fargate-collector/backend"
-	"github.com/wavefronthq/wavefront-fargate-collector/storage"
+	handler "github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate/backend"
+	"github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate/storage"
 )
 
 var (
