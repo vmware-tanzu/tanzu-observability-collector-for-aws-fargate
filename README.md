@@ -1,8 +1,8 @@
-# Wavefront Collector for AWS Fargate [![build status][ci-img]][ci] [![Go Report Card][go-report-img]][go-report] [![Docker Pulls][docker-pull-img]][docker-img]
+# Tanzu Observability Collector for AWS Fargate [![build status][ci-img]][ci] [![Go Report Card][go-report-img]][go-report] [![Docker Pulls][docker-pull-img]][docker-img]
 
 [Wavefront](https://docs.wavefront.com) is a high-performance streaming analytics platform for monitoring and optimizing your environment and applications.
 
-The Wavefront Collector for AWS Fargate collects container stats from AWS Fargate and sends metrics to Wavefront.
+The Tanzu Observability Collector for AWS Fargate collects container stats from AWS Fargate and sends metrics to Wavefront.
 
 ## Web UI
 The Collector provides an API endpoint for debugging purposes that can be used to check what metrics are being collected. To enable the web UI, pass in a port parameter `-port <any-port>` while starting the Collector and ensure the same port is mapped to the container as well.

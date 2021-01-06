@@ -1,4 +1,4 @@
-module github.com/wavefronthq/wavefront-fargate-collector
+module github.com/vmware-tanzu/tanzu-observability-collector-for-aws-fargate
 
 go 1.12
 

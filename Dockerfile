@@ -4,5 +4,5 @@ WORKDIR /app
 # add static html files
 ADD static /app/static
 # Now just add the binary
-ADD fargate_collector_linux /app/
-ENTRYPOINT ["./fargate_collector_linux"]
+ADD tanzu-observability-collector-for-aws-fargate /app/
+ENTRYPOINT ["./tanzu-observability-collector-for-aws-fargate"]
