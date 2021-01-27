@@ -20,7 +20,7 @@ OVERRIDE_IMAGE_NAME?=$(FARGATE_COLLECTOR_TEST_IMAGE)
 LDFLAGS=-w -X main.version=$(VERSION) -X main.commit=$(GIT_COMMIT)
 
 # Binary names
-BINARY_NAME=fargate_collector
+BINARY_NAME=tanzu-observability-collector-for-aws-fargate
 BINARY_LINUX=$(BINARY_NAME)_linux
 BINARY_DARWIN=$(BINARY_NAME)_darwin
 
